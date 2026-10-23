@@ -26,7 +26,9 @@
   </tr>
 </table>
 
-Lips follow the voice level, eyes blink, and a happy face shows when a task is done. All three avatars are open source; [make your own](docs/avatars.md).
+Lips follow the voice level, eyes blink, and a happy face shows when a task is done.
+
+**Four built-in looks**: the device's default face plus the three open-source avatars above, switchable from the console. **Want your own?** Hand the [avatar spec](docs/avatars.md) to your AI agent, describe the character, and it will draw the 16 frames and the happy face, self-check them and upload them to the watch.
 
 ## Features
 
@@ -53,7 +55,17 @@ flowchart LR
 
 The firmware is a fork of [stackchan-pet-fw](https://github.com/Corvelis/stackchan-pet-fw), kept as the [`firmware/`](https://github.com/BTCUP99/stackchan-pet-fw/tree/mac-bridge) submodule. See [architecture](docs/architecture.md) for ports, files and the device protocol.
 
-## Quick start
+## Easiest setup: hand it to your agent
+
+No command-line experience needed. Send this to an AI coding agent that can run commands on your Mac ([Claude Code](https://claude.com/claude-code), Codex, …):
+
+```text
+Please install Jax StopWatch for me following docs/agent-install.md in https://github.com/BTCUP99/jax-stopwatch
+```
+
+It checks your Mac, installs everything, backs up the factory firmware and flashes the watch, asking you before every risky step. Ask it anything along the way, or keep working with it to tweak voices, alerts or avatars. The [agent guide](docs/agent-install.md) tells it exactly what to do and what needs your consent.
+
+## Quick start (manual)
 
 You need an M5Stack StopWatch, a USB-C data cable, an Apple silicon Mac and [uv](https://docs.astral.sh/uv/).
 
@@ -69,7 +81,7 @@ Back up the factory firmware before the first flash ([how](docs/setup.md#2-备�
 
 ## Docs (Chinese)
 
-[Setup & flashing](docs/setup.md) · [Daily use](docs/usage.md) · [Wireless](docs/wireless.md) · [Assistants & X alerts](docs/assistants.md) · [Avatar spec](docs/avatars.md) · [Architecture](docs/architecture.md)
+[Agent-guided setup](docs/agent-install.md) · [Setup & flashing](docs/setup.md) · [Daily use](docs/usage.md) · [Wireless](docs/wireless.md) · [Assistants & X alerts](docs/assistants.md) · [Avatar spec](docs/avatars.md) · [Architecture](docs/architecture.md)
 
 ## Security
 

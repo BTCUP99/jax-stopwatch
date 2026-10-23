@@ -26,7 +26,9 @@
   </tr>
 </table>
 
-说话时嘴型跟着音量开合、会眨眼；任务完成后露出开心表情。三套形象都随仓库开源，也可以按[形象规范](docs/avatars.md)做自己的。
+说话时嘴型跟着音量开合、会眨眼；任务完成后露出开心表情。
+
+**内置 4 款形象**：设备自带的默认脸，加上面这三套开源形象，在控制台一键切换。**想要自己的形象？** 把[形象制作规范](docs/avatars.md)交给你的 Agent，告诉它你想要什么样的角色，它会按规范画好 16 帧和开心表情、自检，再帮你上传到手表。
 
 ## 能做什么
 
@@ -72,7 +74,17 @@ flowchart LR
 - 一台 **Apple silicon Mac**（macOS 14+），装好 [uv](https://docs.astral.sh/uv/)
 - 可选：[Codex CLI](https://github.com/openai/codex) 并登录 ChatGPT；一个 Webhook Agent；[Tailscale](https://tailscale.com/)（在外使用）；X 开发者应用（提醒）
 
-## 快速开始
+## 最省心的安装：交给你的 Agent
+
+不熟悉命令行也没关系。把下面这句话发给你的 AI 编程助手（[Claude Code](https://claude.com/claude-code)、Codex 等能在你电脑上执行命令的 Agent）：
+
+```text
+请按 https://github.com/BTCUP99/jax-stopwatch 的 docs/agent-install.md 帮我安装 Jax StopWatch。
+```
+
+它会检查环境、安装、备份原厂固件、刷机，并在每个关键步骤先问你。过程中遇到任何问题，直接用大白话问它；想调整功能（换声音、加提醒、改形象），也可以继续和它商量着改。[Agent 安装指南](docs/agent-install.md) 里写明了它该怎么做、哪些操作必须先征得你同意。
+
+## 快速开始（手动）
 
 ```sh
 git clone --recursive https://github.com/BTCUP99/jax-stopwatch.git
@@ -89,12 +101,13 @@ scripts/flash.sh --first-install   # 插上手表，首次刷入（会清空整�
 3. 想接 Grok Bot 或 X 提醒：见 [助手与提醒](docs/assistants.md)
 4. 想换个形象：控制台 →“形象管理”，点“上传并使用”
 
-> 第一次刷机前，建议先按 [安装与刷机](docs/setup.md#备份原厂固件) 备份手表的原厂完整镜像。
+> 第一次刷机前，建议先按 [安装与刷机](docs/setup.md#2-备份原厂固件) 备份手表的原厂完整镜像。
 
 ## 文档
 
 | 文档 | 内容 |
 |---|---|
+| [交给 Agent 安装](docs/agent-install.md) | 给 AI 助手的分步安装指南，用户只需一句话 |
 | [安装与刷机](docs/setup.md) | 环境、模型、刷固件、备份与恢复、开机自启动 |
 | [日常使用](docs/usage.md) | 按键、首页图标、语音指令技巧、音量、排障 |
 | [无线组网](docs/wireless.md) | 局域网直连、Tailscale Funnel、安全模型、配对 |
