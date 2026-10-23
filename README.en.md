@@ -30,6 +30,15 @@ Lips follow the voice level, eyes blink, and a happy face shows when a task is d
 
 **Four built-in looks**: the device's default face plus the three open-source avatars above, switchable from the console. **Want your own?** Hand the [avatar spec](docs/avatars.md) to your AI agent, describe the character, and it will draw the 16 frames and the happy face, self-check them and upload them to the watch.
 
+## The home screen
+
+Designed for the 466×466 round display: clock on top, one status row at the bottom (assistant · link · battery), X notice badges along the right edge (counts per kind, each expires after 30 minutes), and the talking avatar in the middle.
+
+<p align="center"><img src="docs/images/home-screen.png" alt="Home screen" width="100%"></p>
+
+<p align="center"><img src="docs/images/status-icons.png" alt="Link and notice icons" width="100%"><br>
+<sub>Left: link states (USB / LAN / Funnel / connecting / no Wi-Fi / Mac unreachable) · Right: notices (follow / reply / mention / repost / quote)</sub></p>
+
 ## Features
 
 - **Push-to-talk** — hold A to speak; tap B to switch assistant, double-tap B to stop.
