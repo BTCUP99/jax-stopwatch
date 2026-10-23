@@ -1,0 +1,13 @@
+{
+  "id": "orbit-warden",
+  "name": "弦核",
+  "version": 2,
+  "description": "原创星际通知小法师：偏心冰青开放轨道、靛蓝菱形面罩、悬浮金白菱核与白紫双层掠翼。安静、聪明、有一点魔法感的终端陪伴 IP。",
+  "frames": {
+    "base": 16,
+    "happy": true,
+    "idle": 0,
+    "think": 0,
+    "listen": false
+  }
+}

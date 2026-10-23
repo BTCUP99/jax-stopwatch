@@ -1,0 +1,15 @@
+# Local state and secrets — never commit
+runtime/
+workspace/
+models/
+firmware-dist/
+*.pem
+.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store

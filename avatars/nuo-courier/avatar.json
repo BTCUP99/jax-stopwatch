@@ -1,0 +1,13 @@
+{
+  "id": "nuo-courier",
+  "name": "糯邮",
+  "version": 2,
+  "description": "原创暖心口袋信使：奶油糯米团身体、单侧软信笺折角、杏橙透明通知口袋和薄荷消息光种。胖嘟嘟、轻松、亲近，适合日常终端陪伴。",
+  "frames": {
+    "base": 16,
+    "happy": true,
+    "idle": 0,
+    "think": 0,
+    "listen": false
+  }
+}

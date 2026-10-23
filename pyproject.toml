@@ -1,0 +1,19 @@
+[project]
+name = "jax-stopwatch"
+version = "0.3.0"
+description = "Talk to Codex and webhook agents from an M5Stack StopWatch, through your Mac."
+license = "MIT"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "aiohttp>=3.10,<4",
+  "pyserial>=3.5,<4",
+  "mlx-whisper>=0.4,<0.5",
+  "huggingface-hub>=0.25,<2",
+  "httpx[socks]>=0.27,<1",
+  "numpy>=1.26,<3",
+  "torch>=2,<3",
+  "pillow>=13.0.0",
+]
+
+[tool.uv]
+package = false
