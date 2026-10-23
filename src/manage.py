@@ -66,8 +66,10 @@ def autostart(enable):
         AGENT.unlink(missing_ok=True)
         print("已关闭开机自启动")
         return
-    env = {"PATH": "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
-           "HOME": str(Path.home()), "LANG": "zh_CN.UTF-8"}
+    # Keep the session's PATH so tools installed via nvm, npm prefixes etc. (codex, cloudflared) resolve.
+    base = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    path = ":".join(p for p in dict.fromkeys((os.environ.get("PATH", "") + ":" + base).split(":")) if p)
+    env = {"PATH": path, "HOME": str(Path.home()), "LANG": "zh_CN.UTF-8"}
     # Carry the session's proxy settings, if any, into the login agent.
     for key in ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY"):
         if os.environ.get(key):

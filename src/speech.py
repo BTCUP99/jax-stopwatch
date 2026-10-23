@@ -3,6 +3,7 @@ import json
 import re
 import subprocess
 import threading
+import wave
 from pathlib import Path
 import numpy as np
 
@@ -64,15 +65,17 @@ class Speech:
         raw = self.cache / (digest + ".pcm")
         if raw.exists():
             return raw.read_bytes()
-        aiff = self.cache / (digest + ".aiff")
-        subprocess.run(["/usr/bin/say", "-v", self.voice, "-r", str(self.rate), "-o", str(aiff), text], check=True,
+        # `say` writes the device format (16 kHz mono s16le) directly; no ffmpeg needed.
+        wav = self.cache / (digest + ".wav")
+        subprocess.run(["/usr/bin/say", "-v", self.voice, "-r", str(self.rate), "--file-format=WAVE",
+                        "--data-format=LEI16@16000", "--channels=1", "-o", str(wav), text], check=True,
                        stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=90)
-        subprocess.run(["/opt/homebrew/bin/ffmpeg", "-y", "-v", "error", "-i", str(aiff),
-                        "-ac", "1", "-ar", "16000", "-f", "s16le", str(raw)], check=True,
-                       stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=30)
-        aiff.unlink(missing_ok=True)
+        with wave.open(str(wav)) as source:
+            pcm = source.readframes(source.getnframes())
+        wav.unlink(missing_ok=True)
+        raw.write_bytes(pcm)
         raw.chmod(0o600)
-        return raw.read_bytes()
+        return pcm
 
 
 def chinese_voices():
