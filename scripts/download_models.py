@@ -1,13 +1,14 @@
-"""Fetch the local speech models into models/, pinned and checksum-verified."""
+"""Fetch the local speech models into models/ (under JAX_HOME if set), pinned and checksum-verified."""
 import hashlib
 import json
+import os
 import sys
 import urllib.request
 from pathlib import Path
 
 from huggingface_hub import hf_hub_download
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(os.environ.get("JAX_HOME") or Path(__file__).resolve().parents[1]).expanduser()
 WHISPER = {"repo": "mlx-community/whisper-small-mlx", "revision": "45f3915923c7a79a5a5b5a7d909d39aeb0e5630e",
            "files": {"weights.npz": "55b6674c9b339702d486e2b1573839a66f8ec8f821ed2886993ef717a86b09f5",
                      "config.json": "e8f58e638208af66d5d5d67801259dc7a12d199e971967a9f9d33a8e3635668e"}}

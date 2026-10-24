@@ -9,7 +9,7 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-RUNTIME = ROOT / "runtime"
+RUNTIME = Path(os.environ.get("JAX_HOME") or ROOT).expanduser() / "runtime"  # see bridge.py
 URL = "http://127.0.0.1:18765"
 
 
@@ -30,6 +30,7 @@ def start():
     python = ROOT / ".venv/bin/python"
     if not python.exists():
         raise RuntimeError("缺少 Python 环境，请先在项目目录运行 uv sync")
+    RUNTIME.mkdir(mode=0o700, parents=True, exist_ok=True)
     with (RUNTIME / "bridge.log").open("ab") as log:
         child = subprocess.Popen([str(python), str(ROOT / "src/bridge.py")], cwd=ROOT,
             stdin=subprocess.DEVNULL, stdout=log, stderr=log, start_new_session=True)
@@ -70,8 +71,8 @@ def autostart(enable):
     base = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
     path = ":".join(p for p in dict.fromkeys((os.environ.get("PATH", "") + ":" + base).split(":")) if p)
     env = {"PATH": path, "HOME": str(Path.home()), "LANG": "zh_CN.UTF-8"}
-    # Carry the session's proxy settings, if any, into the login agent.
-    for key in ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY"):
+    # Carry the session's proxy and data-folder settings, if any, into the login agent.
+    for key in ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "JAX_HOME", "JAX_WORKSPACE", "JAX_AVATARS"):
         if os.environ.get(key):
             env[key] = os.environ[key]
     AGENT.write_bytes(plistlib.dumps({

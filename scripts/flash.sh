@@ -61,5 +61,6 @@ fi
 $esptool write-flash 0x10000 "$IMAGE"
 if (( was_running )); then
   sleep 3
-  .venv/bin/python src/manage.py start
+  # Hand the bridge back to the login agent when autostart is on, so crash restarts keep working.
+  launchctl kickstart "gui/$(id -u)/io.github.jax-stopwatch.bridge" 2>/dev/null || .venv/bin/python src/manage.py start
 fi

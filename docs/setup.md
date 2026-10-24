@@ -85,15 +85,33 @@ cd ..
 scripts/flash.sh firmware/.pio/build/m5stack-stopwatch-release/firmware.bin
 ```
 
+### 数据目录（可选）
+
+默认私密状态（`runtime/`）、模型（`models/`）和工作区（`workspace/`）都放在仓库目录里。想让代码和数据分开（比如用一份发布版运行、另一份克隆做开发，或升级时直接换掉代码目录），设置环境变量即可：
+
+| 变量 | 默认 | 作用 |
+|---|---|---|
+| `JAX_HOME` | 仓库目录 | 数据目录，含 `runtime/`、`models/`，以及默认的 `workspace/` |
+| `JAX_WORKSPACE` | `$JAX_HOME/workspace` | Codex 工作区 |
+| `JAX_AVATARS` | 仓库的 `avatars/` | 形象来源目录 |
+
+在设置了这些变量的终端里运行 `setup.sh` 和 `autostart on`，登录项会一并记住它们。
+
 首页、好感度等开关在 `firmware/src/config.h`：`STACKCHAN_MAC_BRIDGE_HOME`、`STACKCHAN_AFFECTION_ENABLED`。
 
 ## 4. 更新
 
+日常使用建议停在发布版本上（[Releases](https://github.com/BTCUP99/jax-stopwatch/releases)），比 `main` 更稳：
+
 ```sh
-git pull --recurse-submodules
+git fetch --tags
+git checkout v0.3.1                  # 换成最新的版本号
+git submodule update
 uv sync --locked
-scripts/stop.command && scripts/start.command
+scripts/stop.command && scripts/start.command   # 开了自启动可改用 launchctl kickstart
 ```
+
+想跟最新开发版就把 `git checkout v…` 换成 `git checkout main && git pull`。
 
 固件有新版本时 `scripts/flash.sh` 的版本号会跟着更新，重新运行即可。
 

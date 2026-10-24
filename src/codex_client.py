@@ -15,7 +15,7 @@ def utf8(value):
 
 
 class CodexClient:
-    def __init__(self, root, emit):
+    def __init__(self, root, emit, workdir):
         self.root = Path(root)
         self.emit = emit
         self.process = None
@@ -31,7 +31,7 @@ class CodexClient:
         self.account_type = None
         self.model = None
         self.session_file = self.root / "runtime/codex-session.json"
-        self.workdir = self.root / "workspace"
+        self.workdir = Path(workdir)
         self.workdir.mkdir(exist_ok=True)
 
     async def send(self, message):

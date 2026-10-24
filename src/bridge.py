@@ -22,7 +22,10 @@ from wake import SileroVoice, UtteranceGate, parse_voice, validate_name
 from tunnel import QuickTunnel
 from xwatch import XWatch
 
-ROOT = Path(__file__).resolve().parents[1]
+CODE = Path(__file__).resolve().parents[1]
+# Private state, models and the workspace live in JAX_HOME (default: this checkout),
+# so a release checkout can run against a data folder kept elsewhere.
+ROOT = Path(os.environ.get("JAX_HOME") or CODE).expanduser()
 RUNTIME = ROOT / "runtime"
 PORT = 18765
 BADGE_KINDS = ("follow", "reply", "mention", "repost", "quote")
@@ -30,12 +33,16 @@ BADGE_SECONDS = 30 * 60
 MANUAL_URL = "https://github.com/BTCUP99/jax-stopwatch/blob/main/docs/usage.md"
 
 
+def workspace():
+    return Path(os.environ.get("JAX_WORKSPACE") or ROOT / "workspace").expanduser()
+
+
 class Bridge:
     def __init__(self):
         self.state = {"phase": "starting", "agent": "codex", "connected": False,
                       "transcript": "", "reply": "", "message": "正在连接设备", "approvals": [],
                       "grokConfigured": False, "callbackReady": False, "codexReady": False, "recording": False,
-                      "workdir": str(ROOT / "workspace")}
+                      "workdir": str(workspace())}
         self.history = []
         self.audio = bytearray()
         self.job = None
@@ -48,7 +55,7 @@ class Bridge:
         self.ingress_attempts = deque(maxlen=20)
         self.lan_cert, self.lan_ssl = lan_certificate(RUNTIME)
         self.speech = Speech(ROOT)
-        self.codex = CodexClient(ROOT, self.emit)
+        self.codex = CodexClient(ROOT, self.emit, workspace())
         self.grok_config_file = RUNTIME / "grok.json"
         self.grok = json.loads(self.grok_config_file.read_text()) if self.grok_config_file.exists() else {}
         if self.grok.pop("callbackBase", None) is not None:
@@ -85,7 +92,7 @@ class Bridge:
         self.x_task = None
         self.notice_task = None
         self.shown_agent = None  # assistant last shown on the device screen
-        self.avatars = Library(ROOT / "avatars")
+        self.avatars = Library(Path(os.environ.get("JAX_AVATARS") or CODE / "avatars").expanduser())
         self.device_avatars = None  # last avatar.list from the device
         self.avatar_upload = None  # {"id", "done", "total"} while uploading
         self.closing = False
@@ -733,7 +740,7 @@ async def main():
     app = web.Application(middlewares=[local_only], client_max_size=65536)
 
     async def index(request):
-        return web.FileResponse(ROOT / "src/dashboard.html", headers={"Cache-Control": "no-store"})
+        return web.FileResponse(CODE / "src/dashboard.html", headers={"Cache-Control": "no-store"})
 
     async def manual(request):
         raise web.HTTPFound(MANUAL_URL)
