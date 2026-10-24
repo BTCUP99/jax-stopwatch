@@ -12,7 +12,7 @@
 
 <p align="center"><a href="README.md">中文</a> · <b>English</b></p>
 
-<p align="center">🆕 <b>v0.4.0</b>: touch reactions — tap to giggle, stroke to laugh · <a href="CHANGELOG.md">Changelog</a> (Chinese)</p>
+<p align="center">🆕 <b>v0.4.1</b>: shake to replay the latest X alert · v0.4.0: touch reactions · <a href="CHANGELOG.md">Changelog</a> (Chinese)</p>
 
 **Jax StopWatch** turns an [M5Stack StopWatch](https://docs.m5stack.com/) round-screen watch into a pocket AI remote. **Hold A, talk, release.** Your Mac transcribes the audio locally, hands the text to Codex or your own webhook agent, and speaks the answer back through the watch. It keeps working away from home over a phone hotspot, buzzes for new X followers, mentions and replies, and its on-screen companion can change outfits.
 
@@ -49,7 +49,7 @@ Designed for the 466×466 round display: clock on top, one status row at the bot
 - **Two kinds of assistant** — [Codex](https://github.com/openai/codex) via `codex app-server` (uses your ChatGPT login, works on files in a local workspace), or any cloud agent reachable by webhook (Grok Bot routines, Cursor Automations, …) with a one-time callback.
 - **Private speech** — Whisper small on MLX, offline on the Mac; replies via macOS `say`. Audio never leaves the machine.
 - **Works anywhere** — USB when plugged in; otherwise home Wi-Fi straight to the Mac over pinned TLS, or a phone hotspot through Tailscale Funnel. Per-device keys, written over USB only.
-- **X alerts** — follows, mentions, replies, reposts and quotes in real time: vibration, speech and an icon that expires after 30 minutes.
+- **X alerts** — follows, mentions, replies, reposts and quotes in real time: vibration, speech and an icon that expires after 30 minutes; shake the watch while the icon shows to hear the latest one again.
 - **Swappable avatars** — 16 mouth × eye frames plus a happy face; upload and switch from the console without reflashing.
 - **Local console** at `http://127.0.0.1:18765` for history, Codex approvals, wireless pairing and avatars.
 

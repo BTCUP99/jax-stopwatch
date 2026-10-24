@@ -64,7 +64,7 @@ flowchart TB
 | `lan-cert.pem` / `lan-key.pem` | 局域网入口证书与私钥 | 是 |
 | `codex-session.json` | 专用 Codex 会话编号 | 是 |
 | `wake.json` / `voice.json` | 唤醒设置 / 播报声音与语速 | — |
-| `face.json` | 触摸表情开关 | — |
+| `face.json` | 触摸表情、摇一摇重播开关 | — |
 | `events.jsonl` | 事件记录（超过 5MB 启动时轮换） | 含任务文本 |
 | `bridge.log` 等 | 排障日志 | — |
 
@@ -104,6 +104,7 @@ USB 串口和 WebSocket（一帧一条消息）都用同样的帧：
 | `avatar.delete` | → 设备 | 删除一套形象；**只接受 USB** |
 | `face.happy` | → 设备 | 回到待机后显示开心表情 `durationMs`（≤5000） |
 | `face.touch` | → 设备 | `enabled`：首页触摸表情开关（轻点 giggle、抚摸 laugh），设备默认开启，连接时下发 |
+| `interaction.event` | 设备 → | 上游的交互事件；Mac 只处理 `event: shake, phase: start`，用于摇一摇重播最新的 X 提醒（仍有图标时） |
 
 `device.info` 的 `capabilities` 列出设备支持的功能（如 `net.config`、`audio.adpcm`、`notify.badges`、`avatar.store`、`face.happy`、`face.touch`），Mac 端据此决定是否启用对应功能，旧固件不会收到不认识的命令。
 

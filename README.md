@@ -12,7 +12,7 @@
 
 <p align="center"><b>中文</b> · <a href="README.en.md">English</a></p>
 
-<p align="center">🆕 <b>v0.4.0</b>：触摸表情——轻点嘻嘻、抚摸哈哈 · <a href="CHANGELOG.md">更新日志</a></p>
+<p align="center">🆕 <b>v0.4.1</b>：摇一摇重播最新 X 提醒 · v0.4.0：触摸表情 · <a href="CHANGELOG.md">更新日志</a></p>
 
 **Jax StopWatch** 把一块 [M5Stack StopWatch](https://docs.m5stack.com/) 圆屏手表变成你的随身 AI 入口：**按住 A 键说话，松开发送**，家里的 Mac 在本地把语音转成文字，交给 Codex 或你自己的 Webhook 助手去办，再把结果用语音播回手表。出门在外经手机热点也能用，X 上有新粉丝、@ 和回复会实时振动提醒，屏幕上的小伙伴可以随时换装。
 
@@ -51,7 +51,7 @@
 | 🧠 | **两类助手** | [Codex](https://github.com/openai/codex)（沿用 ChatGPT 登录，在本机工作区里改文件、写脚本），或任何能接收 Webhook 的云端 Agent（例如 Grok Bot / Cursor Automations）。 |
 | 🔒 | **本地语音** | 识别用 MLX 版 Whisper small，在 Mac 上离线完成；播报用 macOS 自带语音。录音不出本机。 |
 | 📶 | **哪里都能连** | 插着 USB 走有线；拔掉后自动连家里 Wi-Fi 直连 Mac，在外经手机热点 + Tailscale Funnel 连回家，都是加密连接、设备独立密钥。 |
-| 🔔 | **X 提醒** | 新粉丝、@ 提及、回复、转发、引用实时推送：振动 + 播报 + 屏幕右侧图标，30 分钟后自动消失。 |
+| 🔔 | **X 提醒** | 新粉丝、@ 提及、回复、转发、引用实时推送：振动 + 播报 + 屏幕右侧图标，30 分钟后自动消失；图标还在时摇一摇手表可重播最新一条。 |
 | 🎨 | **可换形象** | 16 帧嘴型 × 眼睛 + 开心表情，控制台一键上传、切换，无需刷机。 |
 | 🖥️ | **本机控制台** | `http://127.0.0.1:18765`：看对话、审批 Codex 操作、配对无线、管理形象，只对本机开放。 |
 

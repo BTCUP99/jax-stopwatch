@@ -30,6 +30,7 @@ RUNTIME = ROOT / "runtime"
 PORT = 18765
 BADGE_KINDS = ("follow", "reply", "mention", "repost", "quote")
 BADGE_SECONDS = 30 * 60
+REPLAY_COOLDOWN = 10  # seconds between shake replays
 MANUAL_URL = "https://github.com/BTCUP99/jax-stopwatch/blob/main/docs/usage.md"
 
 
@@ -69,7 +70,11 @@ class Bridge:
         self.device_task = None
         self.funnel_task = None
         self.face_file = RUNTIME / "face.json"
-        self.touch_reactions = (json.loads(self.face_file.read_text()) if self.face_file.exists() else {}).get("touch", True)
+        face = json.loads(self.face_file.read_text()) if self.face_file.exists() else {}
+        self.touch_reactions = face.get("touch", True)
+        self.shake_replay = face.get("shake", True)
+        self.last_notice = None  # (time, text) of the newest X notice; replayable while its badge is on screen
+        self.replay_after = 0.
         self.wake_file = RUNTIME / "wake.json"
         wake = json.loads(self.wake_file.read_text()) if self.wake_file.exists() else {}
         self.wake_name = validate_name(wake.get("name", "贾克斯"))
@@ -335,6 +340,8 @@ class Bridge:
                 asyncio.create_task(self.button_action(self.cancel()))
             elif event.get("action") == "next_agent":
                 asyncio.create_task(self.button_action(self.select_agent("grok" if self.state["agent"] == "codex" else "codex")))
+        elif kind == "interaction.event" and event.get("event") == "shake" and event.get("phase") == "start":
+            asyncio.create_task(self.button_action(self.replay_notice()))
         elif kind in ("display.speech_bubble.error", "error"):
             await self.emit("device_error", {"event": event})
 
@@ -470,6 +477,7 @@ class Bridge:
         self.notices.append((time.time(), text))
         if kind in BADGE_KINDS:
             self.badges.append((kind, time.time()))
+            self.last_notice = (time.time(), text)
             await self.push_badges()
 
     def supports(self, capability):
@@ -492,14 +500,34 @@ class Bridge:
         if self.device.connected and self.supports("face.touch"):
             await self.device.send({"type": "face.touch", "enabled": self.touch_reactions})
 
+    def save_face(self):
+        saved = self.face_file.with_suffix(".tmp")
+        saved.write_text(json.dumps({"touch": self.touch_reactions, "shake": self.shake_replay}))
+        saved.chmod(0o600)
+        saved.replace(self.face_file)
+
     async def set_touch(self, enabled):
         """Tap-to-giggle / stroke-to-laugh on the home face; the device default is on."""
         self.touch_reactions = enabled
-        saved = self.face_file.with_suffix(".tmp")
-        saved.write_text(json.dumps({"touch": enabled}))
-        saved.chmod(0o600)
-        saved.replace(self.face_file)
+        self.save_face()
         await self.push_touch()
+
+    def set_shake(self, enabled):
+        self.shake_replay = enabled
+        self.save_face()
+
+    async def replay_notice(self):
+        """Shake: read the newest X notice again, but only while its badge is still on the home
+        screen (it clears after BADGE_SECONDS) and the device is idle; other shakes are ignored."""
+        now = time.time()
+        if (not self.shake_replay or not self.last_notice or now - self.last_notice[0] >= BADGE_SECONDS
+                or now < self.replay_after or not self.device.connected or self.state["recording"]
+                or self.state["phase"] not in ("ready", "error") or (self.job and not self.job.done())
+                or self.speak_lock.locked() or self.wake_processing):
+            return
+        self.replay_after = now + REPLAY_COOLDOWN
+        await self.emit("shake_replay", {})  # notice text stays out of the event log
+        self.job = asyncio.create_task(self.announce(self.last_notice[1], "重播 X 提醒"))
 
     async def refresh_avatars(self):
         if self.device.connected and self.supports("avatar.store"):
@@ -510,7 +538,7 @@ class Bridge:
         return {"supported": self.supports("avatar.store"), "local": self.avatars.listing(),
                 "device": listing.get("avatars"), "active": listing.get("active"),
                 "fsTotal": listing.get("fsTotal"), "fsUsed": listing.get("fsUsed"), "upload": self.avatar_upload,
-                "touch": self.touch_reactions, "touchSupported": self.supports("face.touch")}
+                "touch": self.touch_reactions, "touchSupported": self.supports("face.touch"), "shake": self.shake_replay}
 
     def require_idle(self):
         if self.state["recording"] or (self.job and not self.job.done()) or self.speak_lock.locked():
@@ -610,11 +638,11 @@ class Bridge:
                     and not self.speak_lock.locked() and not self.wake_processing):
                 self.job = asyncio.create_task(self.announce(self.notices.popleft()[1]))
 
-    async def announce(self, text):
+    async def announce(self, text, label="X 提醒"):
         try:
             if self.device.info.get("macBridgeVersion"):
                 await self.device.send({"type": "bridge.haptic", "durationMs": 200})
-            self.state.update(phase="speaking", message="X 提醒", reply=text)
+            self.state.update(phase="speaking", message=label, reply=text)
             await self.speak(text)
             await self.show_happy()
             self.state.update(phase="ready", message="按住 A 键讲话")
@@ -822,6 +850,8 @@ async def main():
         elif command == "remote/badges/preview":
             for kind in BADGE_KINDS:
                 bridge.badges.append((kind, time.time() - BADGE_SECONDS + 120))
+            # Lets the preview also try shake-to-replay for the same two minutes.
+            bridge.last_notice = (time.time() - BADGE_SECONDS + 120, "这是一条测试提醒，摇一摇手表可以重播。")
             await bridge.push_badges()
         elif command == "remote/revoke":
             bridge.registry.revoke(str(data.get("id", "")))
@@ -841,6 +871,8 @@ async def main():
             await bridge.show_happy()
         elif command == "avatar/touch":
             await bridge.set_touch(data.get("enabled") is True)
+        elif command == "avatar/shake":
+            bridge.set_shake(data.get("enabled") is True)
         elif command == "grok/config":
             url, key = str(data.get("url", "")).strip(), str(data.get("key", "")).strip()
             if not url.startswith("https://") or not key:

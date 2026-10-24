@@ -138,6 +138,28 @@ class PairingAndBadgeTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual([i["kind"] for i in items], ["reply", "mention"])
         self.assertTrue(1190 <= items[0]["ttlSec"] <= 1200 and items[1]["ttlSec"] >= 1799)
 
+    async def test_shake_replays_newest_notice_only_while_its_badge_shows(self):
+        self.bridge.state["phase"] = "ready"
+        self.bridge.announce = AsyncMock()
+        shake = {"type": "interaction.event", "event": "shake", "phase": "start"}
+        await self.bridge.replay_notice()  # nothing on screen yet
+        self.bridge.announce.assert_not_awaited()
+        await self.bridge.queue_notice("reply", "旧回复")
+        await self.bridge.queue_notice("mention", "新提及")
+        await self.bridge.on_device(shake)
+        await asyncio.sleep(0)
+        await self.bridge.job
+        self.bridge.announce.assert_awaited_once_with("新提及", "重播 X 提醒")
+        await self.bridge.replay_notice()  # cooldown
+        self.assertEqual(self.bridge.announce.await_count, 1)
+        self.bridge.replay_after = 0.
+        self.bridge.last_notice = (module.time.time() - module.BADGE_SECONDS, "已清除")
+        await self.bridge.replay_notice()  # badge expired
+        self.bridge.last_notice = (module.time.time(), "新提及")
+        self.bridge.set_shake(False)
+        await self.bridge.replay_notice()  # turned off in the console
+        self.assertEqual(self.bridge.announce.await_count, 1)
+
 
 if __name__ == "__main__":
     unittest.main()

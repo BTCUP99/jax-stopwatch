@@ -6,6 +6,15 @@
 
 ## [未发布]
 
+## [0.4.1] - 2026-10-25
+
+### 新增
+- **摇一摇重播**：首页还有 X 提醒图标时，摇一摇手表重播最新一条。图标 30 分钟自动清除后不再响应；设备忙或 10 秒内重复摇晃不响应，减少走路甩手误触。控制台“形象管理”可关闭。
+- 控制台“预览提醒标识”附带一条可重播 2 分钟的测试提醒，方便试摇。
+
+### ⚠️ 升级须知
+- 无需刷固件（手表本来就会上报摇晃，0.3.0 起即可用）。更新代码后重启后台即可。
+
 ## [0.4.0] - 2026-10-24
 
 ### 新增
@@ -51,7 +60,8 @@
 - 形象管理：经 USB 上传形象到手表、无需刷机即可切换；三套开源形象与开心表情。
 - 固件 0.3.0，基于 stackchan-pet-fw v0.4.1。
 
-[未发布]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.4.0...HEAD
+[未发布]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/BTCUP99/jax-stopwatch/releases/tag/v0.3.0
