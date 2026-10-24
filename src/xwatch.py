@@ -79,6 +79,7 @@ class XWatch:
         self.config = json.loads(self.file.read_text()) if self.file.exists() else {}
         self.pending_auth = {}
         self.streaming = False
+        self.backfill = True  # cleared if the app's X plan rejects backfill_minutes
         self.error = ""
         self.last_event = 0.
         self.recent = deque(maxlen=20)  # memory only
@@ -225,13 +226,16 @@ class XWatch:
                 if set(c.get("subscriptions") or {}) != set(WANTED):
                     await self.ensure_subscriptions()
                 params = {}
-                if disconnected:
+                if disconnected and self.backfill:
                     params["backfill_minutes"] = max(1, min(5, int((time.time() - disconnected) // 60) + 1))
                 await self.stream(params)
                 delay = 5
             except asyncio.CancelledError:
                 raise
             except Exception as error:
+                if isinstance(error, XError) and error.status == 400 and "backfill" in str(error):
+                    self.backfill = False  # reconnect at once without it; events missed while offline are lost
+                    continue
                 self.error = str(error) or type(error).__name__
                 await self.emit("x_error", {"message": self.error[:300]})
                 if isinstance(error, XError) and error.status == 429:
