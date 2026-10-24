@@ -6,7 +6,7 @@
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-3b82f6"></a>
   <img alt="macOS Apple silicon" src="https://img.shields.io/badge/Mac-Apple%20silicon-111827?logo=apple">
   <img alt="M5Stack StopWatch" src="https://img.shields.io/badge/device-M5Stack%20StopWatch-f97316">
-  <img alt="Firmware 0.3.0" src="https://img.shields.io/badge/firmware-0.3.0-10b981">
+  <img alt="Firmware 0.4.0" src="https://img.shields.io/badge/firmware-0.4.0-10b981">
   <img alt="Python 3.12" src="https://img.shields.io/badge/python-3.12-3776ab?logo=python&logoColor=white">
 </p>
 
@@ -26,9 +26,11 @@
   </tr>
 </table>
 
-说话时嘴型跟着音量开合、会眨眼；任务完成后露出开心表情。
+说话时嘴型跟着音量开合、会眨眼；任务完成后露出开心表情；轻点它会嘻嘻调皮，来回抚摸会哈哈大笑。
 
-**内置 4 款形象**：设备自带的默认脸，加上面这三套开源形象，在控制台一键切换。**想要自己的形象？** 把[形象制作规范](docs/avatars.md)交给你的 Agent，告诉它你想要什么样的角色，它会按规范画好 16 帧和开心表情、自检，再帮你上传到手表。
+**内置 4 款形象**：设备自带的默认脸，加上面这三套开源形象，在控制台一键切换。**想要自己的形象？** 把[形象制作规范](docs/avatars.md)交给你的 Agent，告诉它你想要什么样的角色，它会按规范画好 16 帧、开心表情和触摸表情、自检，再帮你上传到手表。
+
+> 💾 **存储空间**：手表留给形象的空间约 3.4MB。三套自带形象（含触摸表情）共约 1.2MB，每套自制形象约 0.3–0.5MB，还能再放 4–7 套。控制台会显示已用空间，详见[容量参考](docs/avatars.md#8-容量参考)。
 
 ## 首页面板
 

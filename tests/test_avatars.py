@@ -9,14 +9,14 @@ from pathlib import Path
 from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from avatars import BASE, Library, chunks
+from avatars import BASE, TOUCH, Library, chunks
 
 
-def make_set(root, avatar_id, size=386, happy=True):
+def make_set(root, avatar_id, size=386, happy=True, touch=False):
     folder = root / avatar_id
     folder.mkdir()
     (folder / "avatar.json").write_text(json.dumps({"id": avatar_id, "name": "测试", "version": 1}))
-    for name in BASE + (["happy"] if happy else []):
+    for name in BASE + (["happy"] if happy else []) + (TOUCH if touch else []):
         Image.new("RGB", (size, size), (40, 80, 120)).save(folder / f"{name}.png")
     return folder
 
@@ -45,6 +45,17 @@ class AvatarTests(unittest.TestCase):
             jpeg = dict(library.files("good"))["base_m0_e0.jpg"]
             self.assertEqual(jpeg[:2], b"\xff\xd8")
             self.assertIn(b"\xff\xc0", jpeg)  # baseline, which the firmware decoder needs
+
+    def test_touch_frames_are_uploaded_when_present(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_set(root, "playful", touch=True)
+            library = Library(root)
+            self.assertTrue(library.listing()[0]["touch"])
+            names = [name for name, _ in library.files("playful")]
+            self.assertEqual(names[16:], ["happy.jpg"] + [f"{n}.jpg" for n in TOUCH] + ["meta.json"])
+            (root / "playful/laugh_2.png").unlink()
+            self.assertFalse(library.listing()[0]["touch"])
 
     def test_rejects_bad_ids_and_sizes(self):
         with tempfile.TemporaryDirectory() as tmp:

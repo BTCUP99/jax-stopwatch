@@ -68,6 +68,8 @@ class Bridge:
         self.tunnel_task = None
         self.device_task = None
         self.funnel_task = None
+        self.face_file = RUNTIME / "face.json"
+        self.touch_reactions = (json.loads(self.face_file.read_text()) if self.face_file.exists() else {}).get("touch", True)
         self.wake_file = RUNTIME / "wake.json"
         wake = json.loads(self.wake_file.read_text()) if self.wake_file.exists() else {}
         self.wake_name = validate_name(wake.get("name", "贾克斯"))
@@ -311,6 +313,7 @@ class Bridge:
             asyncio.create_task(self.sync_clock())
             self.device_avatars = None
             asyncio.create_task(self.button_action(self.refresh_avatars()))
+            asyncio.create_task(self.button_action(self.push_touch()))
         elif kind == "bridge.disconnected":
             self.wake_epoch += 1
             self.wake_streaming = False
@@ -485,6 +488,19 @@ class Bridge:
         if self.device.connected and self.supports("face.happy"):
             await self.device.send({"type": "face.happy", "durationMs": 2000})
 
+    async def push_touch(self):
+        if self.device.connected and self.supports("face.touch"):
+            await self.device.send({"type": "face.touch", "enabled": self.touch_reactions})
+
+    async def set_touch(self, enabled):
+        """Tap-to-giggle / stroke-to-laugh on the home face; the device default is on."""
+        self.touch_reactions = enabled
+        saved = self.face_file.with_suffix(".tmp")
+        saved.write_text(json.dumps({"touch": enabled}))
+        saved.chmod(0o600)
+        saved.replace(self.face_file)
+        await self.push_touch()
+
     async def refresh_avatars(self):
         if self.device.connected and self.supports("avatar.store"):
             self.device_avatars = await self.device.request("avatar.list", timeout=10)
@@ -493,7 +509,8 @@ class Bridge:
         listing = self.device_avatars or {}
         return {"supported": self.supports("avatar.store"), "local": self.avatars.listing(),
                 "device": listing.get("avatars"), "active": listing.get("active"),
-                "fsTotal": listing.get("fsTotal"), "fsUsed": listing.get("fsUsed"), "upload": self.avatar_upload}
+                "fsTotal": listing.get("fsTotal"), "fsUsed": listing.get("fsUsed"), "upload": self.avatar_upload,
+                "touch": self.touch_reactions, "touchSupported": self.supports("face.touch")}
 
     def require_idle(self):
         if self.state["recording"] or (self.job and not self.job.done()) or self.speak_lock.locked():
@@ -822,6 +839,8 @@ async def main():
             await bridge.delete_avatar(str(data.get("id", "")))
         elif command == "avatar/happy":
             await bridge.show_happy()
+        elif command == "avatar/touch":
+            await bridge.set_touch(data.get("enabled") is True)
         elif command == "grok/config":
             url, key = str(data.get("url", "")).strip(), str(data.get("key", "")).strip()
             if not url.startswith("https://") or not key:

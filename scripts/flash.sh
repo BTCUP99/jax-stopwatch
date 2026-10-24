@@ -8,7 +8,7 @@
 # --first-install erases the whole flash. Back up the factory firmware first (docs/setup.md).
 set -euo pipefail
 cd "${0:A:h}/.."
-VERSION=0.3.0
+VERSION=0.4.0
 UPSTREAM_FACTORY=https://github.com/Corvelis/stackchan-pet-fw/releases/download/v0.4.1/stackchan_stopwatch_factory.bin
 UPSTREAM_FACTORY_SHA256=ee7aee7648a0e60fb348cd85c6017c362e4d8fb3cf8b2bbbe64888c2e47061f3
 

@@ -6,7 +6,7 @@
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-3b82f6"></a>
   <img alt="macOS Apple silicon" src="https://img.shields.io/badge/Mac-Apple%20silicon-111827?logo=apple">
   <img alt="M5Stack StopWatch" src="https://img.shields.io/badge/device-M5Stack%20StopWatch-f97316">
-  <img alt="Firmware 0.3.0" src="https://img.shields.io/badge/firmware-0.3.0-10b981">
+  <img alt="Firmware 0.4.0" src="https://img.shields.io/badge/firmware-0.4.0-10b981">
   <img alt="Python 3.12" src="https://img.shields.io/badge/python-3.12-3776ab?logo=python&logoColor=white">
 </p>
 
@@ -26,9 +26,11 @@
   </tr>
 </table>
 
-Lips follow the voice level, eyes blink, and a happy face shows when a task is done.
+Lips follow the voice level, eyes blink, a happy face shows when a task is done, and a tap or a stroke on the screen makes it giggle or laugh.
 
-**Four built-in looks**: the device's default face plus the three open-source avatars above, switchable from the console. **Want your own?** Hand the [avatar spec](docs/avatars.md) to your AI agent, describe the character, and it will draw the 16 frames and the happy face, self-check them and upload them to the watch.
+**Four built-in looks**: the device's default face plus the three open-source avatars above, switchable from the console. **Want your own?** Hand the [avatar spec](docs/avatars.md) to your AI agent, describe the character, and it will draw the 16 frames, the happy face and the touch reactions, self-check them and upload them to the watch.
+
+> 💾 **Storage**: the watch has about 3.4 MB for avatars. The three bundled sets (with touch reactions) take about 1.2 MB; a custom set takes 0.3–0.5 MB, so 4–7 more fit. The console shows used space; see [capacity](docs/avatars.md#8-容量参考).
 
 ## The home screen
 

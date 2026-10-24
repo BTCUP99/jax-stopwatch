@@ -12,6 +12,7 @@ MAX_JPEG = 40_000
 CHUNK = 4096  # raw bytes per avatar.put; base64 keeps the frame under the 8 KB SCU1 limit
 ID = re.compile(r"[a-z0-9-]{1,20}")
 BASE = [f"base_m{m}_e{e}" for m in range(4) for e in range(4)]
+TOUCH = ["giggle_1", "giggle_2", "laugh_1", "laugh_2"]  # tap / stroke reactions, optional
 
 
 def jpeg(path):
@@ -54,14 +55,15 @@ class Library:
             missing = [name for name in BASE if not (folder / f"{name}.png").is_file()]
             sets.append({"id": folder.name, "name": str(meta.get("name") or folder.name),
                          "description": str(meta.get("description") or ""), "version": meta.get("version"),
-                         "happy": (folder / "happy.png").is_file(), "complete": not missing})
+                         "happy": (folder / "happy.png").is_file(),
+                         "touch": all((folder / f"{name}.png").is_file() for name in TOUCH), "complete": not missing})
         return sets
 
     def files(self, avatar_id):
         """Every device file of a set, converted: [(name, bytes)]."""
         folder = self.folder(avatar_id)
         meta = json.loads((folder / "avatar.json").read_text())
-        names = BASE + (["happy"] if (folder / "happy.png").is_file() else [])
+        names = BASE + [name for name in ["happy", *TOUCH] if (folder / f"{name}.png").is_file()]
         files = [(f"{name}.jpg", jpeg(folder / f"{name}.png")) for name in names]
         info = {"id": avatar_id, "name": str(meta.get("name") or avatar_id), "version": meta.get("version")}
         files.append(("meta.json", json.dumps(info, ensure_ascii=False).encode()))

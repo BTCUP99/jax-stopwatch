@@ -68,7 +68,7 @@ scripts/flash.sh --first-install
 scripts/flash.sh
 ```
 
-只写应用分区 `0x10000`，设备里的 Wi-Fi 配对和上传的形象都保留。两种方式都会从 [Releases](https://github.com/BTCUP99/jax-stopwatch/releases) 下载 `jax-stopwatch-0.3.0.bin` 并校验，自动找到唯一一台 StopWatch，临时停止后台、刷完再启动。
+只写应用分区 `0x10000`，设备里的 Wi-Fi 配对和上传的形象都保留。两种方式都会从 [Releases](https://github.com/BTCUP99/jax-stopwatch/releases) 下载 `jax-stopwatch-<版本>.bin` 并校验，自动找到唯一一台 StopWatch，临时停止后台、刷完再启动。
 
 > 只适用于 M5Stack **StopWatch**（ESP32-S3，8MB 分区表）。不要把其他板型的镜像刷到这台设备上。
 

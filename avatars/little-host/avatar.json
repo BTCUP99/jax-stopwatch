@@ -1,13 +1,15 @@
 {
   "id": "little-host",
   "name": "小主播",
-  "version": 2,
+  "version": 3,
   "description": "圆屏小主播：青蓝短发、粉色方框眼镜、暖赭皮肤、金色耳饰与彩条西装。",
   "frames": {
     "base": 16,
     "happy": true,
     "idle": 0,
     "think": 0,
-    "listen": false
+    "listen": false,
+    "giggle": 2,
+    "laugh": 2
   }
 }
