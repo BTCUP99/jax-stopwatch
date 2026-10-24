@@ -1,0 +1,57 @@
+# 更新日志
+
+本项目的重要变更都记在这里。格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循[语义化版本](https://semver.org/lang/zh-CN/)。固件镜像和每版的完整说明见 [Releases](https://github.com/BTCUP99/jax-stopwatch/releases)。
+
+升级时请留意标有 **⚠️ 升级须知** 的条目：是否需要刷固件、重新上传形象等。通用步骤见[安装说明 · 更新](docs/setup.md#4-更新)。
+
+## [未发布]
+
+## [0.4.0] - 2026-10-24
+
+### 新增
+- **触摸表情**（固件 0.4.0）：待机时轻点首页形象“嘻嘻”调皮，来回抚摸“哈哈”大笑，只有表情、不出声。录音、播报、任务进行中不触发。
+- 形象规范新增 4.2 节：`giggle_1/2`、`laugh_1/2` 四张触摸帧；三套自带形象已补齐。
+- 控制台“形象管理”新增触摸表情开关（保存在 `runtime/face.json`）。
+- 文档新增存储空间说明：手表留给形象约 3.4MB，三套自带形象（含触摸帧）约 1.2MB，每套自制形象约 0.3–0.5MB。
+
+### 变更
+- 首页的上游摸头动画换成触摸表情。
+- 缺少触摸帧的形象触摸时显示开心表情；内置默认脸不反应。
+
+### ⚠️ 升级须知
+- 需要刷固件：`scripts/flash.sh`（只写应用分区，Wi-Fi 配对和已上传的形象保留）。
+- 已上传的形象要插 USB 在控制台点一次“重新上传”，才会带上触摸帧；不重传也能用。
+
+## [0.3.1] - 2026-10-24
+
+### 新增
+- 数据目录可与代码分开：`JAX_HOME`、`JAX_WORKSPACE`、`JAX_AVATARS`，方便用一份发布版日常运行、另一份克隆做开发。
+- 文档：交给 AI 编程助手的安装指南（`docs/agent-install.md`）、首页布局与状态图标说明。
+
+### 修复
+- X 提醒断线后不再恢复：重连时如果 X 套餐不支持 `backfill_minutes`，改为不带该参数立即重连（断线期间的事件不会补发）。
+- 播报不再依赖 Homebrew 的 ffmpeg，改用 macOS `say` 直接输出设备格式。
+- 开机自启动沿用当前终端的 `PATH`，用 nvm 等安装的 `codex`、`cloudflared` 也能找到。
+- `flash.sh` 刷写后把后台交还给登录项，异常退出仍会自动重启。
+- 固件第三方声明补上 efontCN 字体。
+
+### ⚠️ 升级须知
+- 无需刷固件（仍为 0.3.0）。更新代码后重启后台即可。
+
+## [0.3.0] - 2026-10-23
+
+首个公开版本。
+
+### 新增
+- 按键对讲：按住 A 说话，单击 B 切换 Codex / Webhook 助手，双击 B 停止。
+- Mac 本地语音识别（MLX Whisper small）与 macOS 语音播报。
+- USB、局域网（TLS）、Tailscale Funnel 三种连接自动切换；每台设备独立密钥，只能经 USB 写入。
+- X 提醒：新粉丝、@、回复、转发、引用，振动、播报并在屏幕右侧显示图标。
+- 首页：顶部时间、底部状态栏、说话时嘴型与眨眼。
+- 形象管理：经 USB 上传形象到手表、无需刷机即可切换；三套开源形象与开心表情。
+- 固件 0.3.0，基于 stackchan-pet-fw v0.4.1。
+
+[未发布]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.3.1...v0.4.0
+[0.3.1]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.3.0...v0.3.1
+[0.3.0]: https://github.com/BTCUP99/jax-stopwatch/releases/tag/v0.3.0

@@ -12,6 +12,8 @@
 
 <p align="center"><b>中文</b> · <a href="README.en.md">English</a></p>
 
+<p align="center">🆕 <b>v0.4.0</b>：触摸表情——轻点嘻嘻、抚摸哈哈 · <a href="CHANGELOG.md">更新日志</a></p>
+
 **Jax StopWatch** 把一块 [M5Stack StopWatch](https://docs.m5stack.com/) 圆屏手表变成你的随身 AI 入口：**按住 A 键说话，松开发送**，家里的 Mac 在本地把语音转成文字，交给 Codex 或你自己的 Webhook 助手去办，再把结果用语音播回手表。出门在外经手机热点也能用，X 上有新粉丝、@ 和回复会实时振动提醒，屏幕上的小伙伴可以随时换装。
 
 “Jax（贾克斯）”是这只桌面宠物的名字。

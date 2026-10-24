@@ -12,6 +12,8 @@
 
 <p align="center"><a href="README.md">中文</a> · <b>English</b></p>
 
+<p align="center">🆕 <b>v0.4.0</b>: touch reactions — tap to giggle, stroke to laugh · <a href="CHANGELOG.md">Changelog</a> (Chinese)</p>
+
 **Jax StopWatch** turns an [M5Stack StopWatch](https://docs.m5stack.com/) round-screen watch into a pocket AI remote. **Hold A, talk, release.** Your Mac transcribes the audio locally, hands the text to Codex or your own webhook agent, and speaks the answer back through the watch. It keeps working away from home over a phone hotspot, buzzes for new X followers, mentions and replies, and its on-screen companion can change outfits.
 
 "Jax" (贾克斯) is the name of the desk pet. The UI and voice are in Chinese by default; docs are mostly Chinese with this English overview.
