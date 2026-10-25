@@ -22,6 +22,27 @@ SCOPES = "tweet.read users.read follows.read offline.access"
 # checks that the follow targets this account.
 WANTED = {"follow.follow": {"direction": "inbound"}, "post.mention.create": {}, "post.reply.create": {},
           "post.repost.create": {}, "post.quote.create": {}}
+TAG = "stopwatch"
+
+
+def plan(listing, me, wanted):
+    """Split X's subscription listing into ({event_type: id} already in place, ids of ours no longer wanted).
+
+    Only subscriptions this bridge created (tag "stopwatch") are ever removed, so other tools on the
+    same X app keep theirs.
+    """
+    found, stale = {}, []
+    for sub in listing:
+        filt = sub.get("filter") or {}
+        if str(filt.get("user_id")) != str(me):
+            continue
+        direction = filt.get("direction") or (filt.get("qualifiers") or {}).get("direction")
+        kind, want = sub.get("event_type"), WANTED.get(sub.get("event_type"))
+        if kind in wanted and kind not in found and direction == want.get("direction"):
+            found[kind] = sub.get("subscription_id")
+        elif sub.get("tag") == TAG:
+            stale.append(sub.get("subscription_id"))
+    return found, stale
 
 
 class XError(RuntimeError):
@@ -100,7 +121,8 @@ class XWatch:
                 "authorized": bool(c.get("refresh") or c.get("access")),
                 "username": (c.get("user") or {}).get("username"),
                 "enabled": c.get("enabled", True), "streaming": self.streaming,
-                "subscriptions": sorted(c.get("subscriptions", {})), "error": self.error,
+                "subscriptions": sorted(c.get("subscriptions", {})), "events": self.events(),
+                "error": self.error,
                 "lastEvent": self.last_event, "redirect": self.redirect,
                 "recent": list(self.recent)}
 
@@ -116,11 +138,20 @@ class XWatch:
                 self.config[key] = value
         if isinstance(data.get("enabled"), bool):
             self.config["enabled"] = data["enabled"]
+        if isinstance(data.get("events"), list):
+            events = [kind for kind in WANTED if kind in data["events"]]
+            if not events:
+                raise ValueError("至少保留一种提醒；全部不要时请取消“接收提醒”")
+            self.config["events"] = events
         if not self.config.get("bearer") or not self.config.get("clientId"):
             raise ValueError("请填写 Bearer Token 和 OAuth 2.0 Client ID")
         self.save()
         self.error = ""
         self.wake.set()
+
+    def events(self):
+        """Event types the user wants announced; all of them unless narrowed in the console."""
+        return [kind for kind in WANTED if kind in self.config.get("events", WANTED)]
 
     def authorize_url(self):
         if not self.config.get("clientId"):
@@ -185,22 +216,21 @@ class XWatch:
             return json.loads(body) if body else {}
 
     async def ensure_subscriptions(self):
-        me = self.config["user"]["id"]
-        found = {}
+        me, wanted = self.config["user"]["id"], self.events()
         try:
             listing = await self.call("GET", "/activity/subscriptions", auth="user", params={"user_id": me})
         except XError:
             listing = await self.call("GET", "/activity/subscriptions", params={"user_id": me})
-        for sub in listing.get("data") or []:
-            filt = sub.get("filter") or {}
-            direction = filt.get("direction") or (filt.get("qualifiers") or {}).get("direction")
-            want = WANTED.get(sub.get("event_type"))
-            if want is not None and str(filt.get("user_id")) == str(me) and direction == want.get("direction"):
-                found[sub["event_type"]] = sub.get("subscription_id")
-        for event_type, extra in WANTED.items():
+        found, stale = plan(listing.get("data") or [], me, wanted)
+        for subscription in stale:  # turned off in the console: stop paying for its events
+            try:
+                await self.call("DELETE", f"/activity/subscriptions/{subscription}", auth="user")
+            except XError:
+                await self.call("DELETE", f"/activity/subscriptions/{subscription}")
+        for event_type in wanted:
             if event_type in found:
                 continue
-            body = {"event_type": event_type, "filter": {"user_id": me, **extra}, "tag": "stopwatch"}
+            body = {"event_type": event_type, "filter": {"user_id": me, **WANTED[event_type]}, "tag": TAG}
             try:
                 result = await self.call("POST", "/activity/subscriptions", auth="user", json=body)
             except XError:
@@ -223,7 +253,7 @@ class XWatch:
                 await self.wake.wait()
                 continue
             try:
-                if set(c.get("subscriptions") or {}) != set(WANTED):
+                if set(c.get("subscriptions") or {}) != set(self.events()):
                     await self.ensure_subscriptions()
                 params = {}
                 if disconnected and self.backfill:
@@ -288,6 +318,8 @@ class XWatch:
         if uid in self.seen:
             return
         self.seen.append(uid)
+        if event.get("event_type") not in self.events():
+            return  # just turned off; X may still deliver it until the subscription is gone
         result = describe(event, self.config["user"]["id"])
         if not result:
             return

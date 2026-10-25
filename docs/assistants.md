@@ -96,6 +96,8 @@ Content-Type: application/json
 
 新粉丝、@ 提及、回复、转发、引用会实时推到手表：振动 + 播报 + 首页右侧图标（每条 30 分钟后消失）。不订阅点赞。
 
+五种提醒可以在控制台“X 提醒”里分别勾选。取消勾选的类型会从 X 上退订，不再推送，也不占 API 额度；重新勾选后自动订阅回来。
+
 用的是 X API 的 Activity 长连接（`/activity/stream`），需要一个 X 开发者应用：
 
 1. 在 [X 开发者后台](https://developer.x.com/) 的应用里打开 **User authentication settings**：类型选 Web App，权限 Read，回调地址填 `http://127.0.0.1:18765/x/callback`。

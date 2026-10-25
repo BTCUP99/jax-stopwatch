@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from xwatch import describe
+from xwatch import describe, plan
 
 
 class DescribeTests(unittest.TestCase):
@@ -42,6 +42,24 @@ class DescribeTests(unittest.TestCase):
     def test_own_post_mentioning_self_is_ignored(self):
         event = {"event_type": "post.mention.create", "payload": {"author_id": "1", "text": "@me hi"}}
         self.assertIsNone(describe(event, "1"))
+
+
+class PlanTests(unittest.TestCase):
+    def sub(self, kind, id, tag="stopwatch", user="1", **extra):
+        return {"event_type": kind, "subscription_id": id, "tag": tag, "filter": {"user_id": user, **extra}}
+
+    def test_turned_off_kind_is_removed_others_kept(self):
+        listing = [self.sub("follow.follow", "f", direction="inbound"), self.sub("post.reply.create", "r")]
+        self.assertEqual(plan(listing, "1", ["post.reply.create", "post.quote.create"]), ({"post.reply.create": "r"}, ["f"]))
+
+    def test_other_tools_subscriptions_are_left_alone(self):
+        listing = [self.sub("follow.follow", "w", tag="workflow", direction="inbound"),
+                   self.sub("post.like.create", "l", tag="workflow"), self.sub("post.reply.create", "o", user="2")]
+        self.assertEqual(plan(listing, "1", ["post.reply.create"]), ({}, []))
+
+    def test_wrong_direction_follow_is_replaced(self):
+        listing = [self.sub("follow.follow", "out", direction="outbound")]
+        self.assertEqual(plan(listing, "1", ["follow.follow"]), ({}, ["out"]))
 
 
 if __name__ == "__main__":
