@@ -6,6 +6,14 @@
 
 ## [未发布]
 
+## [0.5.2] - 2026-10-25
+
+### 变更
+- 控制台“形象管理”里正在使用的形象更醒目：浅蓝底、预览图外一圈表圈式描边，左上角“使用中”标签。
+
+### ⚠️ 升级须知
+- 无需刷固件（仍为 0.5.0）。更新代码后重启后台即可。
+
 ## [0.5.1] - 2026-10-25
 
 ### 新增
@@ -88,7 +96,8 @@
 - 形象管理：经 USB 上传形象到手表、无需刷机即可切换；三套开源形象与开心表情。
 - 固件 0.3.0，基于 stackchan-pet-fw v0.4.1。
 
-[未发布]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.5.1...HEAD
+[未发布]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.5.2...HEAD
+[0.5.2]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.4.0...v0.4.1
