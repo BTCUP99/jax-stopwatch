@@ -6,12 +6,18 @@
 
 ## [未发布]
 
+## [0.5.1] - 2026-10-25
+
 ### 新增
 - `scripts/check_avatar.py`：检查形象的轮廓有没有直线切口、画布圆外有没有像素，并画出手表上的圆屏预览。
 - 控制台“形象管理”的设备存储旁显示已上传几套形象（建议不超过 8 套）。
 
 ### 变更
 - 形象规范新增 2.1 节“轮廓”：主体只能以画布圆（圆周出血）或造型本身结束，不能被横线、竖线截断（半身像平切、照片沿边框裁成方块在圆屏上会是明显切口）。容量参考按实测更新：合计约 8–10 套，建议 8 套以内。
+
+### ⚠️ 升级须知
+- 无需刷固件（仍为 0.5.0）。更新代码后重启后台即可。
+- 已上传的形象不受影响；按新规范修好轮廓的形象需要重新上传。
 
 ## [0.5.0] - 2026-10-25
 
@@ -82,7 +88,8 @@
 - 形象管理：经 USB 上传形象到手表、无需刷机即可切换；三套开源形象与开心表情。
 - 固件 0.3.0，基于 stackchan-pet-fw v0.4.1。
 
-[未发布]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.5.0...HEAD
+[未发布]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.3.1...v0.4.0
