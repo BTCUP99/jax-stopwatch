@@ -6,6 +6,8 @@
 
 ## [未发布]
 
+## [0.5.4] - 2026-10-25
+
 ### 新增
 - 控制台“X 提醒”可以分别勾选新粉丝、@ 提及、回复、转发、引用。取消的类型会从 X 退订，不再推送、不占 API 额度；重新勾选后自动订阅回来。只会退订本项目建立的订阅（标签 `stopwatch`），同一 X 应用里其他工具的订阅不受影响。
 
@@ -110,7 +112,8 @@
 - 形象管理：经 USB 上传形象到手表、无需刷机即可切换；三套开源形象与开心表情。
 - 固件 0.3.0，基于 stackchan-pet-fw v0.4.1。
 
-[未发布]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.5.3...HEAD
+[未发布]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.5.4...HEAD
+[0.5.4]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.5.3...v0.5.4
 [0.5.3]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.5.2...v0.5.3
 [0.5.2]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/BTCUP99/jax-stopwatch/compare/v0.5.0...v0.5.1

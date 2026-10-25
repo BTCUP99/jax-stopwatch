@@ -12,7 +12,7 @@
 
 <p align="center"><a href="README.md">中文</a> · <b>English</b></p>
 
-<p align="center">🆕 <b>v0.5.3</b>: no more lag with many avatars (firmware 0.5.1) · v0.5.2: console highlights the avatar in use · v0.5.0: swipe to switch avatars, triple-tap to laugh · <a href="CHANGELOG.md">Changelog</a> (Chinese)</p>
+<p align="center">🆕 <b>v0.5.4</b>: pick which X notice types to receive · v0.5.3: no more lag with many avatars (firmware 0.5.1) · v0.5.0: swipe to switch avatars, triple-tap to laugh · <a href="CHANGELOG.md">Changelog</a> (Chinese)</p>
 
 **Jax StopWatch** turns an [M5Stack StopWatch](https://docs.m5stack.com/) round-screen watch into a pocket AI remote. **Hold A, talk, release.** Your Mac transcribes the audio locally, hands the text to Codex or your own webhook agent, and speaks the answer back through the watch. It keeps working away from home over a phone hotspot, buzzes for new X followers, mentions and replies, and its on-screen companion can change outfits.
 
