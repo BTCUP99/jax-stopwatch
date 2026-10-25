@@ -6,13 +6,13 @@
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-3b82f6"></a>
   <img alt="macOS Apple silicon" src="https://img.shields.io/badge/Mac-Apple%20silicon-111827?logo=apple">
   <img alt="M5Stack StopWatch" src="https://img.shields.io/badge/device-M5Stack%20StopWatch-f97316">
-  <img alt="Firmware 0.5.0" src="https://img.shields.io/badge/firmware-0.5.0-10b981">
+  <img alt="Firmware 0.5.1" src="https://img.shields.io/badge/firmware-0.5.1-10b981">
   <img alt="Python 3.12" src="https://img.shields.io/badge/python-3.12-3776ab?logo=python&logoColor=white">
 </p>
 
 <p align="center"><b>中文</b> · <a href="README.en.md">English</a></p>
 
-<p align="center">🆕 <b>v0.5.2</b>：控制台高亮正在使用的形象 · v0.5.1：形象规范适配圆屏轮廓 · v0.5.0：左右滑动换形象、连点三下哈哈大笑 · <a href="CHANGELOG.md">更新日志</a></p>
+<p align="center">🆕 <b>v0.5.3</b>：形象多了也不卡（固件 0.5.1） · v0.5.2：控制台高亮正在使用的形象 · v0.5.0：左右滑动换形象、连点三下哈哈大笑 · <a href="CHANGELOG.md">更新日志</a></p>
 
 **Jax StopWatch** 把一块 [M5Stack StopWatch](https://docs.m5stack.com/) 圆屏手表变成你的随身 AI 入口：**按住 A 键说话，松开发送**，家里的 Mac 在本地把语音转成文字，交给 Codex 或你自己的 Webhook 助手去办，再把结果用语音播回手表。出门在外经手机热点也能用，X 上有新粉丝、@ 和回复会实时振动提醒，屏幕上的小伙伴可以随时换装。
 
