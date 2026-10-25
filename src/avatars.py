@@ -12,7 +12,7 @@ MAX_JPEG = 40_000
 CHUNK = 4096  # raw bytes per avatar.put; base64 keeps the frame under the 8 KB SCU1 limit
 ID = re.compile(r"[a-z0-9-]{1,20}")
 BASE = [f"base_m{m}_e{e}" for m in range(4) for e in range(4)]
-TOUCH = ["giggle_1", "giggle_2", "laugh_1", "laugh_2"]  # tap / stroke reactions, optional
+TOUCH = ["giggle_1", "giggle_2", "laugh_1", "laugh_2"]  # tap / triple-tap reactions, optional
 
 
 def jpeg(path):

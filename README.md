@@ -6,13 +6,13 @@
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-3b82f6"></a>
   <img alt="macOS Apple silicon" src="https://img.shields.io/badge/Mac-Apple%20silicon-111827?logo=apple">
   <img alt="M5Stack StopWatch" src="https://img.shields.io/badge/device-M5Stack%20StopWatch-f97316">
-  <img alt="Firmware 0.4.0" src="https://img.shields.io/badge/firmware-0.4.0-10b981">
+  <img alt="Firmware 0.5.0" src="https://img.shields.io/badge/firmware-0.5.0-10b981">
   <img alt="Python 3.12" src="https://img.shields.io/badge/python-3.12-3776ab?logo=python&logoColor=white">
 </p>
 
 <p align="center"><b>中文</b> · <a href="README.en.md">English</a></p>
 
-<p align="center">🆕 <b>v0.4.1</b>：摇一摇重播最新 X 提醒 · v0.4.0：触摸表情 · <a href="CHANGELOG.md">更新日志</a></p>
+<p align="center">🆕 <b>v0.5.0</b>：左右滑动换形象、连点三下哈哈大笑 · v0.4.1：摇一摇重播 X 提醒 · <a href="CHANGELOG.md">更新日志</a></p>
 
 **Jax StopWatch** 把一块 [M5Stack StopWatch](https://docs.m5stack.com/) 圆屏手表变成你的随身 AI 入口：**按住 A 键说话，松开发送**，家里的 Mac 在本地把语音转成文字，交给 Codex 或你自己的 Webhook 助手去办，再把结果用语音播回手表。出门在外经手机热点也能用，X 上有新粉丝、@ 和回复会实时振动提醒，屏幕上的小伙伴可以随时换装。
 
@@ -28,7 +28,7 @@
   </tr>
 </table>
 
-说话时嘴型跟着音量开合、会眨眼；任务完成后露出开心表情；轻点它会嘻嘻调皮，来回抚摸会哈哈大笑。
+说话时嘴型跟着音量开合、会眨眼；任务完成后露出开心表情；轻点它会嘻嘻调皮，连点三下会哈哈大笑；在手表上左右滑动就能换一套形象。
 
 **内置 4 款形象**：设备自带的默认脸，加上面这三套开源形象，在控制台一键切换。**想要自己的形象？** 把[形象制作规范](docs/avatars.md)交给你的 Agent，告诉它你想要什么样的角色，它会按规范画好 16 帧、开心表情和触摸表情、自检，再帮你上传到手表。
 
@@ -52,7 +52,7 @@
 | 🔒 | **本地语音** | 识别用 MLX 版 Whisper small，在 Mac 上离线完成；播报用 macOS 自带语音。录音不出本机。 |
 | 📶 | **哪里都能连** | 插着 USB 走有线；拔掉后自动连家里 Wi-Fi 直连 Mac，在外经手机热点 + Tailscale Funnel 连回家，都是加密连接、设备独立密钥。 |
 | 🔔 | **X 提醒** | 新粉丝、@ 提及、回复、转发、引用实时推送：振动 + 播报 + 屏幕右侧图标，30 分钟后自动消失；图标还在时摇一摇手表可重播最新一条。 |
-| 🎨 | **可换形象** | 16 帧嘴型 × 眼睛 + 开心表情，控制台一键上传、切换，无需刷机。 |
+| 🎨 | **可换形象** | 16 帧嘴型 × 眼睛 + 开心表情 + 触摸表情，控制台一键上传；在手表上左右滑动或在控制台切换，无需刷机。 |
 | 🖥️ | **本机控制台** | `http://127.0.0.1:18765`：看对话、审批 Codex 操作、配对无线、管理形象，只对本机开放。 |
 
 ## 工作原理
@@ -112,7 +112,7 @@ scripts/flash.sh --first-install   # 插上手表，首次刷入（会清空整�
 1. 想开机自动运行：`.venv/bin/python src/manage.py autostart on`
 2. 想拔线也能用：控制台 →“无线组网”，见 [无线组网](docs/wireless.md)
 3. 想接 Grok Bot 或 X 提醒：见 [助手与提醒](docs/assistants.md)
-4. 想换个形象：控制台 →“形象管理”，点“上传并使用”
+4. 想换个形象：控制台 →“形象管理”，点“上传并使用”；上传过的形象之后在手表首页左右滑动就能切换
 
 > 第一次刷机前，建议先按 [安装与刷机](docs/setup.md#2-备份原厂固件) 备份手表的原厂完整镜像。
 

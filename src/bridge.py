@@ -73,6 +73,7 @@ class Bridge:
         face = json.loads(self.face_file.read_text()) if self.face_file.exists() else {}
         self.touch_reactions = face.get("touch", True)
         self.shake_replay = face.get("shake", True)
+        self.swipe_haptic = face.get("swipeHaptic")  # optional [level 0-255, ms 0-120]; firmware default otherwise
         self.last_notice = None  # (time, text) of the newest X notice; replayable while its badge is on screen
         self.replay_after = 0.
         self.wake_file = RUNTIME / "wake.json"
@@ -317,7 +318,7 @@ class Bridge:
             asyncio.create_task(self.button_action(self.send_lan_hint()))
             asyncio.create_task(self.sync_clock())
             self.device_avatars = None
-            asyncio.create_task(self.button_action(self.refresh_avatars()))
+            asyncio.create_task(self.button_action(self.refresh_avatars(retries=2)))
             asyncio.create_task(self.button_action(self.push_touch()))
         elif kind == "bridge.disconnected":
             self.wake_epoch += 1
@@ -340,6 +341,9 @@ class Bridge:
                 asyncio.create_task(self.button_action(self.cancel()))
             elif event.get("action") == "next_agent":
                 asyncio.create_task(self.button_action(self.select_agent("grok" if self.state["agent"] == "codex" else "codex")))
+        elif kind == "avatar.changed":  # swiped on the watch
+            await self.emit("avatar_selected", {"id": event.get("id") or "built-in", "source": event.get("source")})
+            asyncio.create_task(self.button_action(self.refresh_avatars()))
         elif kind == "interaction.event" and event.get("event") == "shake" and event.get("phase") == "start":
             asyncio.create_task(self.button_action(self.replay_notice()))
         elif kind in ("display.speech_bubble.error", "error"):
@@ -498,17 +502,25 @@ class Bridge:
 
     async def push_touch(self):
         if self.device.connected and self.supports("face.touch"):
-            await self.device.send({"type": "face.touch", "enabled": self.touch_reactions})
+            message = {"type": "face.touch", "enabled": self.touch_reactions}
+            if self.swipe_haptic:
+                message.update(swipeHapticLevel=self.swipe_haptic[0], swipeHapticMs=self.swipe_haptic[1])
+            await self.device.send(message)
 
     def save_face(self):
         saved = self.face_file.with_suffix(".tmp")
-        saved.write_text(json.dumps({"touch": self.touch_reactions, "shake": self.shake_replay}))
+        saved.write_text(json.dumps({"touch": self.touch_reactions, "shake": self.shake_replay,
+                                     **({"swipeHaptic": self.swipe_haptic} if self.swipe_haptic else {})}))
         saved.chmod(0o600)
         saved.replace(self.face_file)
 
-    async def set_touch(self, enabled):
-        """Tap-to-giggle / stroke-to-laugh on the home face; the device default is on."""
+    async def set_touch(self, enabled, swipe_haptic=None):
+        """Tap to giggle / three quick taps to laugh on the home face; the device default is on.
+        swipe_haptic [level, ms] tunes the tick felt when a swipe switches the avatar."""
         self.touch_reactions = enabled
+        if swipe_haptic is not None:
+            level, ms = (int(v) for v in swipe_haptic)
+            self.swipe_haptic = [max(0, min(level, 255)), max(0, min(ms, 120))]
         self.save_face()
         await self.push_touch()
 
@@ -529,9 +541,18 @@ class Bridge:
         await self.emit("shake_replay", {})  # notice text stays out of the event log
         self.job = asyncio.create_task(self.announce(self.last_notice[1], "重播 X 提醒"))
 
-    async def refresh_avatars(self):
-        if self.device.connected and self.supports("avatar.store"):
-            self.device_avatars = await self.device.request("avatar.list", timeout=10)
+    async def refresh_avatars(self, retries=0):
+        # Right after a reboot the device can miss the first request; retry before giving up.
+        for attempt in range(retries + 1):
+            if not (self.device.connected and self.supports("avatar.store")):
+                return
+            try:
+                self.device_avatars = await self.device.request("avatar.list", timeout=10)
+                return
+            except asyncio.TimeoutError:
+                if attempt == retries:
+                    raise
+                await asyncio.sleep(3)
 
     def avatar_status(self):
         listing = self.device_avatars or {}
@@ -870,7 +891,7 @@ async def main():
         elif command == "avatar/happy":
             await bridge.show_happy()
         elif command == "avatar/touch":
-            await bridge.set_touch(data.get("enabled") is True)
+            await bridge.set_touch(data.get("enabled") is True, data.get("swipeHaptic"))
         elif command == "avatar/shake":
             bridge.set_shake(data.get("enabled") is True)
         elif command == "grok/config":

@@ -138,6 +138,12 @@ class PairingAndBadgeTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual([i["kind"] for i in items], ["reply", "mention"])
         self.assertTrue(1190 <= items[0]["ttlSec"] <= 1200 and items[1]["ttlSec"] >= 1799)
 
+    async def test_swipe_on_the_watch_refreshes_the_console(self):
+        self.bridge.refresh_avatars = AsyncMock()
+        await self.bridge.on_device({"type": "avatar.changed", "id": "nuo-courier", "source": "swipe"})
+        await asyncio.sleep(0)
+        self.bridge.refresh_avatars.assert_awaited_once()
+
     async def test_shake_replays_newest_notice_only_while_its_badge_shows(self):
         self.bridge.state["phase"] = "ready"
         self.bridge.announce = AsyncMock()

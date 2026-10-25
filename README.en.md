@@ -6,13 +6,13 @@
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-3b82f6"></a>
   <img alt="macOS Apple silicon" src="https://img.shields.io/badge/Mac-Apple%20silicon-111827?logo=apple">
   <img alt="M5Stack StopWatch" src="https://img.shields.io/badge/device-M5Stack%20StopWatch-f97316">
-  <img alt="Firmware 0.4.0" src="https://img.shields.io/badge/firmware-0.4.0-10b981">
+  <img alt="Firmware 0.5.0" src="https://img.shields.io/badge/firmware-0.5.0-10b981">
   <img alt="Python 3.12" src="https://img.shields.io/badge/python-3.12-3776ab?logo=python&logoColor=white">
 </p>
 
 <p align="center"><a href="README.md">中文</a> · <b>English</b></p>
 
-<p align="center">🆕 <b>v0.4.1</b>: shake to replay the latest X alert · v0.4.0: touch reactions · <a href="CHANGELOG.md">Changelog</a> (Chinese)</p>
+<p align="center">🆕 <b>v0.5.0</b>: swipe to switch avatars, triple-tap to laugh · v0.4.1: shake to replay X alerts · <a href="CHANGELOG.md">Changelog</a> (Chinese)</p>
 
 **Jax StopWatch** turns an [M5Stack StopWatch](https://docs.m5stack.com/) round-screen watch into a pocket AI remote. **Hold A, talk, release.** Your Mac transcribes the audio locally, hands the text to Codex or your own webhook agent, and speaks the answer back through the watch. It keeps working away from home over a phone hotspot, buzzes for new X followers, mentions and replies, and its on-screen companion can change outfits.
 
@@ -28,7 +28,7 @@
   </tr>
 </table>
 
-Lips follow the voice level, eyes blink, a happy face shows when a task is done, and a tap or a stroke on the screen makes it giggle or laugh.
+Lips follow the voice level, eyes blink, a happy face shows when a task is done, a tap makes it giggle and three quick taps make it laugh; swipe left or right on the watch to switch avatars.
 
 **Four built-in looks**: the device's default face plus the three open-source avatars above, switchable from the console. **Want your own?** Hand the [avatar spec](docs/avatars.md) to your AI agent, describe the character, and it will draw the 16 frames, the happy face and the touch reactions, self-check them and upload them to the watch.
 
@@ -50,7 +50,7 @@ Designed for the 466×466 round display: clock on top, one status row at the bot
 - **Private speech** — Whisper small on MLX, offline on the Mac; replies via macOS `say`. Audio never leaves the machine.
 - **Works anywhere** — USB when plugged in; otherwise home Wi-Fi straight to the Mac over pinned TLS, or a phone hotspot through Tailscale Funnel. Per-device keys, written over USB only.
 - **X alerts** — follows, mentions, replies, reposts and quotes in real time: vibration, speech and an icon that expires after 30 minutes; shake the watch while the icon shows to hear the latest one again.
-- **Swappable avatars** — 16 mouth × eye frames plus a happy face; upload and switch from the console without reflashing.
+- **Swappable avatars** — 16 mouth × eye frames plus a happy face; upload from the console, switch there or by swiping on the watch, no reflashing.
 - **Local console** at `http://127.0.0.1:18765` for history, Codex approvals, wireless pairing and avatars.
 
 ## How it works

@@ -119,6 +119,15 @@ class Screen:
             self.tri([(x + 13, y + 6), (x + 18, y + 6), (x + 12, y + h - 1)], bolt)
         self.text((x + w + 9, row), percent, pct_font, border, "lm")
 
+    def page_dots(self, index, count):
+        """Avatar page dots just above the status row, as FaceController draws them."""
+        cx, gap, y = W // 2, 11, H - 46 - 9
+        width = (count - 1) * gap
+        self.rrect(cx - width // 2 - 7, y - 5, width + 14, 11, 5, fill="black")
+        for i in range(count):
+            on = i == index
+            self.circle(cx - width // 2 + i * gap, y, 3 if on else 2, fill=(236, 238, 237) if on else (92, 98, 100))
+
     def badge(self, x, y, kind, count=1):
         bg = (22, 25, 28)
         self.circle(x, y, 20, fill=bg, outline=(42, 47, 51))
@@ -183,6 +192,7 @@ def annotated():
     s.clock()
     s.badges([("follow", 3), ("mention", 1), ("reply", 2), ("repost", 1), ("quote", 1)])
     s.status_row("Codex", 2, 82)
+    s.page_dots(2, 4)
     screen_px = 540
     watch = bezel(s.done(screen_px))
     width, height = 1280, 700
@@ -199,12 +209,12 @@ def annotated():
         (to(233 + 192 * math.cos(math.radians(-30)) + 20, 233 + 192 * math.sin(math.radians(-30))), 210,
          "X 提醒图标", "Follow · @ · reply · repost · quote, 30 min each"),
         (to(370, 260), 330, "当前形象", "16 mouth × eye frames, swappable"),
-        (to(233 + 90, 433), 470, "状态栏：助手 · 连接 · 电量", "Assistant · link · battery"),
+        (to(233 + 90, 433), 470, "形象页码 · 状态栏", "Avatar dots (swipe) · assistant · link · battery"),
     ]
     tx = 760
     # Zoomed status row under its callout.
-    row = s.img.crop((S * 133, S * 418, S * 333, S * 448))
-    row = row.resize((400, 60), Image.LANCZOS)
+    row = s.img.crop((S * 133, S * 400, S * 333, S * 448))
+    row = row.resize((400, 96), Image.LANCZOS)
     inset = Image.new("RGB", (row.width + 4, row.height + 4), (48, 54, 64))
     inset.paste(row, (2, 2))
     img.paste(inset, (tx - 8, 470 + 70))
